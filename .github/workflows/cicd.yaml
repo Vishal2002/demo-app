@@ -33,8 +33,9 @@ jobs:
   deploy:
     name: Deploy Application
     runs-on: ubuntu-latest
-    needs: test  # Only run if tests pass
-    if: github.ref == 'refs/heads/main'  # Only on main branch
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     
     steps:
     - name: Get our code
