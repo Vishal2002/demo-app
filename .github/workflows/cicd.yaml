@@ -49,6 +49,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     #find the deploy hook key from Render Dashboard of your application
-    -  name: Trigger Render Deploy
-       run: |
-          curl -X POST https://api.render.com/deploy/srv-d17c583e5dus73doie1g?key=${{ secrets.RENDER_HOOK }}
+    - name: Trigger Render Deploy
+      run: |
+        curl -X POST ${{ secrets.RENDER_HOOK }}
+  
