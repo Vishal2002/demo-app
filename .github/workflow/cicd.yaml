@@ -1,0 +1,54 @@
+name: Simple CI/CD Pipeline
+
+# When to run this workflow
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# What to do
+jobs:
+  # Job 1: Test our code
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Get our code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run tests
+      run: npm test
+
+  # Job 2: Deploy (only when pushing to main)
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: test  # Only run if tests pass
+    if: github.ref == 'refs/heads/main'  # Only on main branch
+    
+    steps:
+    - name: Get our code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    -  name: Trigger Render Deploy
+       run: |
+          curl -X POST https://api.render.com/deploy/srv-xxxxxx?key=DEPLOY_HOOK_KEY
+       
